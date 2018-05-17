@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 import Main.Main;
 import Model.Course;
 import Model.CourseRepository;
+import static Model.MingChuanConstants.*;
 
 public class CourseCrawler extends Cralwer {
 	private static final String CourseURL = "https://tch.mcu.edu.tw/sylwebqry/pro_qry.aspx?";
@@ -26,8 +27,8 @@ public class CourseCrawler extends Cralwer {
 	@Override
 	public void crawl() {
 		try {
-			for(int year: Main.years)
-				for (int semester: Main.semesters) {
+			for(int year: YEARS)
+				for (int semester: SEMESTERS) {
 					if (!hasCourses(year, semester)) {
 						createDepartments(year, semester);
 						for (String departmentNumber : departmentNumbers)
@@ -52,7 +53,7 @@ public class CourseCrawler extends Cralwer {
 	
 	private void createDepartments(int year, int semester) throws Exception {
 		String cUrl = CourseURL + "g_year=" + String.valueOf(year) + "&g_sem=" + String.valueOf(semester);
-		URLConnection conn = connect(cUrl, Main.sessionIdCookie);
+		URLConnection conn = connect(cUrl, SESSION_ID_COOKIE);
 		String response = getResponse(conn, "UTF-8");
 		Document doc = Jsoup.parse(response.toString());
 		Elements trs = doc.select("#ContentPlaceHolder1_panDept").select("tbody").select("tr");
@@ -65,7 +66,7 @@ public class CourseCrawler extends Cralwer {
 	
 	private void createCourseInfo(String department) throws Exception {
 		String departmentUrl = "https://tch.mcu.edu.tw/sylwebqry/pro10_21.aspx?tdept=" + department;
-		URLConnection conn = connect(departmentUrl, Main.sessionIdCookie);
+		URLConnection conn = connect(departmentUrl, SESSION_ID_COOKIE);
 		String response = getResponse(conn, "UTF-8");
 		Document doc = Jsoup.parse(response.toString());
 		System.out.println(doc.select("span[id=ContentPlaceHolder1_labYearSemTitle]span[class=Label]").text() + " " + department);
@@ -85,7 +86,7 @@ public class CourseCrawler extends Cralwer {
 	private void setUpCourseInfo(Course course) throws Exception {
 		String classUrl = String.format("https://tch.mcu.edu.tw/sylwebqry/pro10_22.aspx?tcls=%s&tcour=%s&tyear=%s&tsem=%s&type=1", 
 				course.getClassId(), course.getCourseId(), course.getYear(), course.getSemseter());
-		URLConnection conn = connect(classUrl, Main.sessionIdCookie);
+		URLConnection conn = connect(classUrl, SESSION_ID_COOKIE);
 		String response = getResponse(conn, "UTF-8");
 		Document doc = Jsoup.parse(response.toString());
 		String name = doc.select("span[id=labCourNm_C]span[class=Label]").text();

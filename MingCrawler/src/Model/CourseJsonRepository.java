@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import static Model.MingChuanConstants.*;
 
 import Main.Main;
 
@@ -59,8 +60,8 @@ public class CourseJsonRepository implements CourseRepository {
 	
 	private void readFile() {
 		List<Course> courses = new ArrayList<>();
-		for (int year : Main.years) {
-			for (int semester : Main.semesters) {
+		for (int year : YEARS) {
+			for (int semester : SEMESTERS) {
 				Type type = new TypeToken<List<Course>>() {}.getType();
 				Gson gson = new Gson();
 				JsonReader reader;

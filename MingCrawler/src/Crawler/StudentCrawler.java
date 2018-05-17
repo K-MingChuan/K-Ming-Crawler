@@ -1,5 +1,8 @@
 package Crawler;
 
+import static Model.MingChuanConstants.SEMESTERS;
+import static Model.MingChuanConstants.YEARS;
+
 import java.io.IOException;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -10,9 +13,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import Main.Main;
 import Model.Student;
-import Model.StudentJsonRepository;
 import Model.StudentRepository;
 import Model.TakenClassesRecord;
 
@@ -56,10 +57,7 @@ public class StudentCrawler extends Cralwer {
 	}
 
 	private boolean hasStudentId() {
-		if (studentRepository.getStudents() != null)
-			return true;
-		return false;
-		
+		return studentRepository.getStudents() != null;
 	}
 	
 	private List<String> getDepartmentNumbers() {
@@ -153,8 +151,8 @@ public class StudentCrawler extends Cralwer {
 	public Student getStudent(String id, String name) {
 		Student student = new Student(id, name);
 		List<TakenClassesRecord> takenClassesRecords = new ArrayList<>();
-		for (int year : Main.years)
-			for (int semester : Main.semesters) {
+		for (int year : YEARS)
+			for (int semester : SEMESTERS) {
 				String eUrl = EPortfolioURL + "gyr=" + String.valueOf(year) + "&gsem=" + String.valueOf(semester);
 
 				URLConnection connection = connect(eUrl, "std%5Fno=" + id);
