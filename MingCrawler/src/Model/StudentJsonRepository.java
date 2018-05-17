@@ -15,7 +15,9 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,7 +26,7 @@ import com.google.gson.stream.JsonReader;
 
 public class StudentJsonRepository implements StudentRepository {
 
-	private List<Student> students =  Collections.synchronizedList(new ArrayList<>());  
+	private Set<Student> students =  Collections.synchronizedSet(new HashSet<>());  
 	private String filename = "students.json";
 
 	public StudentJsonRepository() {
@@ -52,7 +54,7 @@ public class StudentJsonRepository implements StudentRepository {
 
 	@Override
 	public List<Student> getStudents() {
-		return students;
+		return new ArrayList(students);
 	}
 
 	@Override
@@ -70,7 +72,7 @@ public class StudentJsonRepository implements StudentRepository {
 		if (new File(filename).exists()) {
 			try {
 				reader = new JsonReader(new BufferedReader(new InputStreamReader(new FileInputStream(filename),"UTF-8")));
-				students = gson.fromJson(reader, type);
+				students = new HashSet<Student>(gson.fromJson(reader, type));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -82,7 +84,7 @@ public class StudentJsonRepository implements StudentRepository {
 		if (students != null) {
 			Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 			try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"))) {
-				gson.toJson(students, writer);
+				gson.toJson(new ArrayList(students), writer);
 				System.out.println("ºg¿…ßπ¶®");
 				writer.flush();
 				writer.close();

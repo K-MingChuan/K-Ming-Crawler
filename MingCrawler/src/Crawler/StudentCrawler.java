@@ -41,7 +41,7 @@ public class StudentCrawler extends Cralwer {
 		}
 		
 		// 測試取得單一學生修課記錄
-//		Student student = studentRepository.getStudent("04362481");
+//		Student student = studentRepository.getStudent("03360296");
 //		Student s = getStudent(student.getId(), student.getName());
 //		System.out.println(student.getId() + student.getName());
 //		studentRepository.removeStudent(student);
