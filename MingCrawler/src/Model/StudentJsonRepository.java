@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -23,7 +24,7 @@ import com.google.gson.stream.JsonReader;
 
 public class StudentJsonRepository implements StudentRepository {
 
-	private List<Student> students = new ArrayList<>();
+	private List<Student> students =  Collections.synchronizedList(new ArrayList<>());  
 	private String filename = "students.json";
 
 	public StudentJsonRepository() {
@@ -33,7 +34,7 @@ public class StudentJsonRepository implements StudentRepository {
 	
 	@Override
 	public void addStudents(List<Student> students) {
-		this.students = students;
+		this.students.addAll(students);
 		writeFile();
 	}
 
@@ -77,7 +78,7 @@ public class StudentJsonRepository implements StudentRepository {
 		}
 	}
 	
-	private void writeFile() {
+	private synchronized void writeFile() {
 		if (students != null) {
 			Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 			try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"))) {
