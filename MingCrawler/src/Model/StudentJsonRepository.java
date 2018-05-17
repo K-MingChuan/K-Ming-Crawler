@@ -53,16 +53,24 @@ public class StudentJsonRepository implements StudentRepository {
 	public List<Student> getStudents() {
 		return students;
 	}
-	
+
+	@Override
+	public Student getStudent(String id) {
+		for (Student student: students)
+			if (student.getId().equals(id))
+				return student;
+		return null;
+	}
+
 	private void readFile() {
 		Type type = new TypeToken<List<Student>>() {}.getType();
 		Gson gson = new Gson();
 		JsonReader reader;
 		if (new File(filename).exists()) {
 			try {
-				reader = new JsonReader(new FileReader(filename));
+				reader = new JsonReader(new BufferedReader(new InputStreamReader(new FileInputStream(filename),"UTF-8")));
 				students = gson.fromJson(reader, type);
-			} catch (FileNotFoundException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -71,7 +79,7 @@ public class StudentJsonRepository implements StudentRepository {
 	
 	private void writeFile() {
 		if (students != null) {
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 			try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"))) {
 				gson.toJson(students, writer);
 				System.out.println("ºg¿…ßπ¶®");

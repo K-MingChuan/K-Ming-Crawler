@@ -7,4 +7,5 @@ public interface StudentRepository {
 	void addStudent(Student student);
 	void removeStudent(Student student);
 	List<Student> getStudents();
+	Student getStudent(String id);
 }
