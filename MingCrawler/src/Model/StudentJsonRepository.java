@@ -26,11 +26,10 @@ import com.google.gson.stream.JsonReader;
 
 public class StudentJsonRepository implements StudentRepository {
 
-	private Set<Student> students =  Collections.synchronizedSet(new HashSet<>());  
+	private Set<Student> students = Collections.synchronizedSet(new HashSet<Student>());  
 	private String filename = "students.json";
 
 	public StudentJsonRepository() {
-		students = null;
 		readFile();
 	}
 	
@@ -64,6 +63,11 @@ public class StudentJsonRepository implements StudentRepository {
 				return student;
 		return null;
 	}
+	
+	@Override
+	public boolean hasStudents() {
+		return !students.isEmpty();
+	}
 
 	private void readFile() {
 		Type type = new TypeToken<List<Student>>() {}.getType();
@@ -72,7 +76,7 @@ public class StudentJsonRepository implements StudentRepository {
 		if (new File(filename).exists()) {
 			try {
 				reader = new JsonReader(new BufferedReader(new InputStreamReader(new FileInputStream(filename),"UTF-8")));
-				students = new HashSet<Student>(gson.fromJson(reader, type));
+				students = Collections.synchronizedSet(new HashSet<Student>(gson.fromJson(reader, type)));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

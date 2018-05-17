@@ -8,4 +8,5 @@ public interface StudentRepository {
 	void removeStudent(Student student);
 	List<Student> getStudents();
 	Student getStudent(String id);
+	boolean hasStudents();
 }

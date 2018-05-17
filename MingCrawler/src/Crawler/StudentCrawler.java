@@ -41,11 +41,11 @@ public class StudentCrawler extends Cralwer {
 		}
 		
 		// 測試取得單一學生修課記錄
-//		Student student = studentRepository.getStudent("03360296");
-//		Student s = getStudent(student.getId(), student.getName());
-//		System.out.println(student.getId() + student.getName());
-//		studentRepository.removeStudent(student);
-//		studentRepository.addStudent(s);
+		Student student = studentRepository.getStudent("03360296");
+		Student s = getStudent(student.getId(), student.getName());
+		studentRepository.addStudent(s);
+		studentRepository.addStudent(s);
+		System.out.println(s.getId() + s.getName() + s.getTakenClassesRecords());
 		
 		// 這部分是拿全部學生的修課記錄
 //		for (Student student : studentRepository.getStudents()) {
@@ -64,7 +64,7 @@ public class StudentCrawler extends Cralwer {
 	}
 
 	private boolean hasStudentId() {
-		return studentRepository.getStudents() != null;
+		return studentRepository.hasStudents();
 	}
 	
 	private List<String> getDepartmentNumbers() {
