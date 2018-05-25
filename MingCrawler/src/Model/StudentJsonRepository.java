@@ -26,16 +26,21 @@ import com.google.gson.stream.JsonReader;
 
 public class StudentJsonRepository implements StudentRepository {
 
-	private Set<Student> students =  Collections.synchronizedSet(new HashSet<>());  
+	private Set<Student> students = Collections.synchronizedSet(new HashSet<Student>());  
 	private String filename = "students.json";
 
-	public StudentJsonRepository() {
-		students = null;
+	public StudentJsonRepository(){
+		readFile();
+	}
+	
+	public StudentJsonRepository(String filename) {
+		this.filename = filename;
 		readFile();
 	}
 	
 	@Override
 	public void addStudents(List<Student> students) {
+		this.students.removeAll(students);
 		this.students.addAll(students);
 		writeFile();
 	}
@@ -54,7 +59,7 @@ public class StudentJsonRepository implements StudentRepository {
 
 	@Override
 	public List<Student> getStudents() {
-		return new ArrayList(students);
+		return new ArrayList<Student>(students);
 	}
 
 	@Override
@@ -72,7 +77,7 @@ public class StudentJsonRepository implements StudentRepository {
 		if (new File(filename).exists()) {
 			try {
 				reader = new JsonReader(new BufferedReader(new InputStreamReader(new FileInputStream(filename),"UTF-8")));
-				students = new HashSet<Student>(gson.fromJson(reader, type));
+				students = Collections.synchronizedSet(new HashSet<Student>(gson.fromJson(reader, type)));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

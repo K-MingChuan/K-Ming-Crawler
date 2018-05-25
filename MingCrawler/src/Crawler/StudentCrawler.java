@@ -8,6 +8,10 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.function.IntConsumer;
+import java.util.stream.IntStream;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,8 +49,31 @@ public class StudentCrawler extends Cralwer {
 //		Student s = getStudent(student.getId(), student.getName());
 //		System.out.println(student.getId() + student.getName());
 //		studentRepository.removeStudent(student);
-//		studentRepository.addStudent(s);
-		
+		// studentRepository.addStudent(s);
+
+		List<Student> students = studentRepository.getStudents();
+		List<Student> emptyStudents = new ArrayList<>();
+		List<Student> finished = Collections.synchronizedList(new ArrayList<>());
+		int startIndex = 0;
+		for (int i = 0 ; i < students.size() ; i ++)
+			if (students.get(i).getTakenClassesRecords().size() == 0)
+				emptyStudents.add(students.get(i));
+		emptyStudents.parallelStream().forEach(student -> {
+			int random = new Random().nextInt(5000);
+			try {
+				System.out.println("Thread: " + student.getName() + " accessed! Sleep for " + random + " ms.");
+				Thread.sleep(random);
+				System.out.println("Thread: " + student.getName() + " woke up! Start crawling!");
+				student = getStudent(student.getId(), student.getName());
+				studentRepository.removeStudent(student);
+				studentRepository.addStudent(student);
+				System.out.println(student.getId() + " crawling...");
+				finished.add(student);
+				System.out.println("Thread: " + student.getName() + " finished!" + (emptyStudents.size() - finished.size()) + " students left.");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
 		// 這部分是拿全部學生的修課記錄
 //		for (Student student : studentRepository.getStudents()) {
 //			Student s = getStudent(student.getId(), student.getName());
