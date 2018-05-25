@@ -45,7 +45,6 @@ public class StudentCrawler extends Cralwer {
 		}
 		
 		// 測試取得單一學生修課記錄
-<<<<<<< HEAD
 //		Student student = studentRepository.getStudent("03360296");
 //		Student s = getStudent(student.getId(), student.getName());
 //		System.out.println(student.getId() + student.getName());
@@ -75,14 +74,6 @@ public class StudentCrawler extends Cralwer {
 				e.printStackTrace();
 			}
 		});
-=======
-		Student student = studentRepository.getStudent("03360296");
-		Student s = getStudent(student.getId(), student.getName());
-		studentRepository.addStudent(s);
-		studentRepository.addStudent(s);
-		System.out.println(s.getId() + s.getName() + s.getTakenClassesRecords());
-		
->>>>>>> 2b036e45658ab3fe306dd7dfc163281d974378a1
 		// 這部分是拿全部學生的修課記錄
 //		for (Student student : studentRepository.getStudents()) {
 //			Student s = getStudent(student.getId(), student.getName());
