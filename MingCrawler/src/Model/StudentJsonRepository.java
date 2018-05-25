@@ -29,16 +29,12 @@ public class StudentJsonRepository implements StudentRepository {
 	private Set<Student> students = Collections.synchronizedSet(new HashSet<Student>());  
 	private String filename = "students.json";
 
-<<<<<<< HEAD
 	public StudentJsonRepository(){
 		readFile();
 	}
 	
 	public StudentJsonRepository(String filename) {
 		this.filename = filename;
-=======
-	public StudentJsonRepository() {
->>>>>>> 2b036e45658ab3fe306dd7dfc163281d974378a1
 		readFile();
 	}
 	
