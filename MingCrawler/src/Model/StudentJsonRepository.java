@@ -15,8 +15,10 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.Gson;
@@ -26,8 +28,8 @@ import com.google.gson.stream.JsonReader;
 
 public class StudentJsonRepository implements StudentRepository {
 
-	private Set<Student> students = Collections.synchronizedSet(new HashSet<Student>());  
-	private String filename = "students.json";
+	private Set<Student> students = Collections.synchronizedSet(new HashSet<Student>()); 
+	private String filename = "students";
 
 	public StudentJsonRepository(){
 		readFile();
@@ -79,9 +81,9 @@ public class StudentJsonRepository implements StudentRepository {
 		Type type = new TypeToken<List<Student>>() {}.getType();
 		Gson gson = new Gson();
 		JsonReader reader;
-		if (new File(filename).exists()) {
+		if (new File(filename + ".json").exists()) {
 			try {
-				reader = new JsonReader(new BufferedReader(new InputStreamReader(new FileInputStream(filename),"UTF-8")));
+				reader = new JsonReader(new BufferedReader(new InputStreamReader(new FileInputStream(filename + ".json"),"UTF-8")));
 				students = Collections.synchronizedSet(new HashSet<Student>(gson.fromJson(reader, type)));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -93,7 +95,7 @@ public class StudentJsonRepository implements StudentRepository {
 	private synchronized void writeFile() {
 		if (students != null) {
 			Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-			try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"))) {
+			try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename + ".json"),"UTF-8"))) {
 				gson.toJson(new ArrayList(students), writer);
 				System.out.println("ºg¿…ßπ¶®");
 				writer.flush();

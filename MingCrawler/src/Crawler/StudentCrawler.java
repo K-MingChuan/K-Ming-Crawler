@@ -11,7 +11,9 @@ import java.io.OutputStreamWriter;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.IntConsumer;
@@ -33,6 +35,7 @@ public class StudentCrawler extends Cralwer {
 	private String sel3 = "sel-6-3.asp?ch=2";
 	private String tempno = "&tempno=";
 	private List<String> links = new ArrayList<>();
+	private Map<String, Map<String, Student>> students = new HashMap<String, Map<String, Student>>();
 	private List<String> departmentNumbers = new ArrayList<>();
 	private List<String> departmentUrls= new ArrayList<>();
 	private List<String> classnos = new ArrayList<>();
@@ -47,7 +50,7 @@ public class StudentCrawler extends Cralwer {
 		if (!hasStudentId()) {
 			createStudentIdAndName();
 		}
-		saveToTxt();
+//		saveToTxt();
 
 		
 		// 這部分是拿全部學生的修課記錄
@@ -187,6 +190,7 @@ public class StudentCrawler extends Cralwer {
 		String classstr = classmeetingDoc.select("center").select("font").text();
 		String[] tokens = classstr.split("：|　");
 		String classno = tokens[1];
+		String departmentno = tokens[1].substring(0, 2);
 		classnos.add(classno);
 		String subjectno = tokens[5];
 		System.out.println(classno);
@@ -197,13 +201,18 @@ public class StudentCrawler extends Cralwer {
 			Elements tds = trs.get(i).select("td");
 			for (int j = 0; j < tds.size(); j=j+3) {
 				String name = (tds.get(j+1).text().matches(".*[A-Za-z].*"))?tds.get(j+1).text():tds.get(j+1).text().replaceAll(" ", "");
-				Student student = new Student(tds.get(j).text(), name);
+				Student student = new Student(tds.get(j).text(), name, departmentno);
+				student.setTransfer(judgeTransfer(student));
 				studentlist.add(student);
 			}
 		}
 		return studentlist;
 	}
-
+	
+	private boolean judgeTransfer(Student student) {
+		return !student.getDepartmentNo().equals(student.getId().substring(2, 4));
+	}
+	
 	public Student getStudent(String id, String name) {
 		Student student = new Student(id, name);
 		List<TakenClassesRecord> takenClassesRecords = new ArrayList<>();

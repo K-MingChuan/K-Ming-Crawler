@@ -6,7 +6,9 @@ import java.util.List;
 public class Student {
 	private String id;
 	private String name;
+	private String departmentNo;
 	private boolean gender;
+	private boolean transfer;
 	private List<TakenClassesRecord> takenClassesRecords = new ArrayList<>();
 	
 	public Student(String id) {
@@ -16,6 +18,12 @@ public class Student {
 	public Student(String id, String name) {
 		this.id = id;
 		this.name = name;
+	}
+	
+	public Student(String id, String name, String departmentNo) {
+		this.id = id;
+		this.name = name;
+		this.departmentNo = departmentNo;
 	}
 	
 	public Student(String id, String name, List<TakenClassesRecord> takenClassesRecords) {
@@ -62,7 +70,7 @@ public class Student {
 		String classesRecord = "";
 		for (TakenClassesRecord takenClassesRecord : takenClassesRecords)
 			classesRecord += takenClassesRecord.toString() + "\n";
-		return String.format("id = %s, name = %s\n%s", id, name, classesRecord);
+		return String.format("id = %s, name = %s, departmentNo = %s\n%s", id, name, departmentNo, classesRecord);
 	}
 
 	@Override
@@ -88,6 +96,22 @@ public class Student {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public String getDepartmentNo() {
+		return departmentNo;
+	}
+
+	public void setDepartmentNo(String departmentNo) {
+		this.departmentNo = departmentNo;
+	}
+
+	public boolean isTransfer() {
+		return transfer;
+	}
+
+	public void setTransfer(boolean transfer) {
+		this.transfer = transfer;
 	}
 
 }
