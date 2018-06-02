@@ -29,12 +29,18 @@ public class StudentJsonRepository implements StudentRepository {
 	private Set<Student> students = Collections.synchronizedSet(new HashSet<Student>());  
 	private String filename = "students.json";
 
-	public StudentJsonRepository() {
+	public StudentJsonRepository(){
+		readFile();
+	}
+	
+	public StudentJsonRepository(String filename) {
+		this.filename = filename;
 		readFile();
 	}
 	
 	@Override
 	public void addStudents(List<Student> students) {
+		this.students.removeAll(students);
 		this.students.addAll(students);
 		writeFile();
 	}
@@ -53,7 +59,7 @@ public class StudentJsonRepository implements StudentRepository {
 
 	@Override
 	public List<Student> getStudents() {
-		return new ArrayList(students);
+		return new ArrayList<Student>(students);
 	}
 
 	@Override
