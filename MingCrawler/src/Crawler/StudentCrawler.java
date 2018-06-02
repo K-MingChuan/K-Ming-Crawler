@@ -3,7 +3,11 @@ package Crawler;
 import static Model.MingChuanConstants.SEMESTERS;
 import static Model.MingChuanConstants.YEARS;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,13 +43,13 @@ public class StudentCrawler extends Cralwer {
 		if (!hasStudentId()) {
 			createStudentIdAndName();
 		}
-		
+		saveToTxt();
 		// 測試取得單一學生修課記錄
-		Student student = studentRepository.getStudent("03360296");
-		Student s = getStudent(student.getId(), student.getName());
-		studentRepository.addStudent(s);
-		studentRepository.addStudent(s);
-		System.out.println(s.getId() + s.getName() + s.getTakenClassesRecords());
+//		Student student = studentRepository.getStudent("03360296");
+//		Student s = getStudent(student.getId(), student.getName());
+//		studentRepository.addStudent(s);
+//		studentRepository.addStudent(s);
+//		System.out.println(s.getId() + s.getName() + s.getTakenClassesRecords());
 		
 		// 這部分是拿全部學生的修課記錄
 //		for (Student student : studentRepository.getStudents()) {
@@ -54,6 +58,28 @@ public class StudentCrawler extends Cralwer {
 //			studentRepository.addStudent(s);
 //		}
 		
+	}
+	
+	private void saveToTxt() {
+		List<Student> students = studentRepository.getStudents();
+		File fout = new File("students" + ".txt");
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(fout);
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, "Big5"));
+			for (Student student : students) {
+				bw.write(student.getId() + ", "+ student.getName());
+				bw.newLine();
+			}
+			
+			bw.close();
+			 
+			System.out.println("寫檔完成");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
 	}
 	
 	private void printStudents(List<Student> students) {
